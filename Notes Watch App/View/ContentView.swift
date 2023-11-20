@@ -14,6 +14,9 @@ struct ContentView: View {
   @State private var text: String = ""
   
   // MARK: - FUNCTION
+  func save() {
+    dump(notes)
+  }
   
   // MARK: - BODY
     var body: some View {
@@ -23,6 +26,16 @@ struct ContentView: View {
             
             Button {
               // ACTION
+              // 1. Only run the button's action when the text field is not empty
+              guard text.isEmpty == false else { return }
+              
+              let note = Note(id: UUID(), text: text)
+              
+              notes.append(note)
+              
+              text = ""
+              
+              save()
             } label: {
               Image(systemName: "plus.circle")
                 .font(.system(size: 42, weight: .semibold))
@@ -38,6 +51,8 @@ struct ContentView: View {
 //            .padding()
           }
           Spacer()
+          
+          Text("\(notes.count)")
         }
         .navigationTitle("Notes")
         .padding()
