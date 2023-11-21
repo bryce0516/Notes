@@ -47,6 +47,13 @@ struct ContentView: View {
     }
   }
   
+  func delete(offsets: IndexSet) {
+    withAnimation {
+      notes.remove(atOffsets: offsets)
+      save()
+    }
+  }
+  
   // MARK: - BODY
     var body: some View {
         VStack {
@@ -72,12 +79,6 @@ struct ContentView: View {
             .fixedSize()
             .buttonStyle(PlainButtonStyle())
             .foregroundColor(.accentColor)
-//
-//            Image(systemName: "globe")
-//                .imageScale(.large)
-//                .foregroundStyle(.tint)
-//            Text("Hello, world!")
-//            .padding()
           }
           Spacer()
           List {
@@ -92,6 +93,7 @@ struct ContentView: View {
                   .padding(.leading, 5)
               }
             }
+            .onDelete(perform: delete)
           }
         }
         .navigationTitle("Notes")
