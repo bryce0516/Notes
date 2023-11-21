@@ -14,8 +14,37 @@ struct ContentView: View {
   @State private var text: String = ""
   
   // MARK: - FUNCTION
+  
+  func getDocumentDirectory() -> URL {
+    let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+    return path[0]
+  }
+  
   func save() {
-    dump(notes)
+    //    dump(notes)
+    do {
+      let data = try JSONEncoder().encode(notes)
+      
+      let url = getDocumentDirectory().appendingPathComponent("notes")
+      
+      try data.write(to: url)
+    } catch {
+      print("Saving data has failed!")
+    }
+  }
+  
+  func load() {
+    DispatchQueue.main.async {
+      do {
+        let url = getDocumentDirectory().appendingPathComponent("notes")
+        
+        let data = try Data(contentsOf: url)
+        
+        notes = try JSONDecoder().decode([Note].self, from: data)
+      } catch {
+        print("Loading data has failed!")
+      }
+    }
   }
   
   // MARK: - BODY
@@ -56,6 +85,9 @@ struct ContentView: View {
         }
         .navigationTitle("Notes")
         .padding()
+        .onAppear() {
+          load()
+        }
     }
 }
 
