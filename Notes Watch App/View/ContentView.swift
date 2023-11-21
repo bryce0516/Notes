@@ -80,8 +80,19 @@ struct ContentView: View {
 //            .padding()
           }
           Spacer()
-          
-          Text("\(notes.count)")
+          List {
+            ForEach(0..<notes.count, id: \.self) {
+              i in
+              HStack {
+                Capsule()
+                  .frame(width: 4)
+                  .foregroundStyle(.accent)
+                Text(notes[i].text)
+                  .lineLimit(1)
+                  .padding(.leading, 5)
+              }
+            }
+          }
         }
         .navigationTitle("Notes")
         .padding()
